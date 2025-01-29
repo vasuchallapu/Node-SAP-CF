@@ -3,7 +3,7 @@ name: Deploy to SAP Cloud Foundry
 on:
   push:
     branches:
-    #  - main  # Adjust as needed
+      - main  # Adjust as needed
 
 jobs:
   deploy:
@@ -27,6 +27,7 @@ jobs:
       - name: Install Cloud Foundry CLI
         run: |
           curl -fsSL "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -xz
+          sudo chmod +x cf
           sudo mv cf /usr/local/bin/
           cf --version
 
