@@ -1,0 +1,46 @@
+name: Deploy to SAP Cloud Foundry
+
+on:
+  push:
+    branches:
+    #  - main  # Adjust as needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 # Use latest LTS version
+
+      - name: Install Dependencies
+        run: |
+          npm config set @sap:registry https://npm.sap.com
+          npm install
+          npm install --save express body-parser axios
+
+      - name: Install Cloud Foundry CLI
+        run: |
+          curl -fsSL "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -xz
+          sudo mv cf /usr/local/bin/
+          cf --version
+
+      - name: Authenticate to Cloud Foundry
+        env:
+          CF_API: https://api.cf.eu10.hana.ondemand.com
+          CF_USERNAME: ${{ secrets.CF_USERNAME }}
+          CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
+          CF_ORG: ${{ secrets.CF_ORG }}
+          CF_SPACE: ${{ secrets.CF_SPACE }}
+        run: |
+          cf api $CF_API
+          cf auth "$CF_USERNAME" "$CF_PASSWORD"
+          cf target -o "$CF_ORG" -s "$CF_SPACE"
+
+      - name: Deploy Application
+        run: cf push ${{ github.event.repository.name }}
