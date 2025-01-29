@@ -26,10 +26,11 @@ jobs:
 
       - name: Install Cloud Foundry CLI
         run: |
-          curl -fsSL "https://packages.cloudfoundry.org/stable?release=linux64-binary&source=github" | tar -xz
-          sudo chmod +x cf
-          sudo mv cf /usr/local/bin/
-          cf --version
+          wget "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=8.9.0&source=github-rel" -O cf-cli.tgz
+          tar -xvzf cf-cli.tgz
+          sudo mv cf8 /usr/local/bin/cf
+          sudo chmod +x /usr/local/bin/cf
+          cf --version  
 
       - name: Authenticate to Cloud Foundry
         env:
