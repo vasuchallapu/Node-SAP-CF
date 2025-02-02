@@ -35,14 +35,17 @@ jobs:
       - name: Authenticate to Cloud Foundry
         env:
           CF_API: https://api.cf.us10-001.hana.ondemand.com
-          CF_USERNAME: ${{ secrets.CF_USERNAME }}
-          CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
-          CF_ORG: ${{ secrets.CF_ORG }}
-          CF_SPACE: ${{ secrets.CF_SPACE }}
+          CF_ACCESS_TOKEN: ${{ secrets.CF_ACCESS_TOKEN }}
+          # CF_USERNAME: ${{ secrets.CF_USERNAME }}
+          # CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
+          # CF_ORG: ${{ secrets.CF_ORG }}
+          # CF_SPACE: ${{ secrets.CF_SPACE }}
         run: |
           cf api $CF_API
-          echo "Logging in to Cloud Foundry..."
-          cf login -a "$CF_API" -u "$CF_USERNAME" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE" 
+          echo "Logging in using OAuth Token..."
+          cf auth --bearer "$CF_ACCESS_TOKEN"
+          # echo "Logging in to Cloud Foundry..."
+          # cf login -a "$CF_API" -u "$CF_USERNAME" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE" 
           
       - name: Deploy Application
         run: cf push ${{ github.event.repository.name }}
