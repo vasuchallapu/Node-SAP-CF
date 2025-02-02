@@ -38,8 +38,9 @@ jobs:
           CF_ACCESS_TOKEN: ${{ secrets.CF_ACCESS_TOKEN }}
         run: |
           cf api $CF_API
-          echo "Logging in using OAuth Token with bearer..."
-          cf auth --bearer "$CF_ACCESS_TOKEN"
+          echo "Using OAuth Token for authentication..."
+          export CF_OAUTH_TOKEN="$CF_OAUTH_TOKEN"
+          cf target
         
           
       - name: Deploy Application
