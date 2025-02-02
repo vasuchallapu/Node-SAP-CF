@@ -32,15 +32,18 @@ jobs:
           sudo chmod +x /usr/local/bin/cf
           cf --version  
 
-      - name: Authenticate to Cloud Foundry
-        env:
-          CF_UAA_ENDPOINT: ${{ secrets.CF_UAA_ENDPOINT }}
-          CF_CLIENT_ID: ${{ secrets.CF_CLIENT_ID }}
-          CF_CLIENT_SECRET: ${{ secrets.CF_CLIENT_SECRET }}
-        run: |
-          cf api https://api.cf.us10-001.hana.ondemand.com
-          echo "Logging in using service key..."
-          cf auth "$CF_CLIENT_ID" "$CF_CLIENT_SECRET" --client-credentials
+          - name: Authenticate to Cloud Foundry
+          env:
+            CF_API: https://api.cf.us10-001.hana.ondemand.com
+            CF_USERNAME: ${{ secrets.CF_USERNAME }}
+            CF_PASSWORD: ${{ secrets.CF_PASSWORD }}
+            CF_ORG: ${{ secrets.CF_ORG }}
+            CF_SPACE: ${{ secrets.CF_SPACE }}
+          run: |
+            cf api $CF_API
+            echo "Logging in to Cloud Foundry..."
+            cf login -a "$CF_API" -u "$CF_USERNAME" -p "$CF_PASSWORD" -o "$CF_ORG" -s "$CF_SPACE"
+        
     
 
       - name: Deploy Application
