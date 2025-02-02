@@ -38,7 +38,7 @@ jobs:
           CF_ACCESS_TOKEN: ${{ secrets.CF_ACCESS_TOKEN }}
         run: |
           cf api $CF_API
-          echo "Logging in using OAuth Token..."
+          echo "Logging in using OAuth Token with bearer..."
           cf auth --bearer "$CF_ACCESS_TOKEN"
         
           
